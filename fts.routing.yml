@@ -1,0 +1,7 @@
+fts.clusters:
+  path: '/Clusters' 
+  defaults: 
+    _controller: '\Drupal\fts\Controller\FtsController::content' 
+    _title: 'HR Clusters'
+  requirements: 
+    _permission: 'access content'  
