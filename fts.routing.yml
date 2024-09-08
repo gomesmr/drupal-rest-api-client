@@ -1,15 +1,15 @@
-fts.clusters:
-  path: '/Clusters'
-  defaults:
-    _controller: '\Drupal\fts\Controller\FtsController::content'
-    _title: 'HR Clusters'
-  requirements:
-    _permission: 'access content'
-
 fts.mleva_post:
   path: '/mleva-post'
   defaults:
     _controller: '\Drupal\fts\Controller\FtsController::postMleva'
     _title: 'Post MLeva Data'
+  requirements:
+    _permission: 'access content'
+
+fts.product_get:
+  path: '/mleva-product/{gtin}'
+  defaults:
+    _controller: '\Drupal\fts\Controller\FtsController::getProductByGtin'
+    _title: 'Get Product by GTIN'
   requirements:
     _permission: 'access content'

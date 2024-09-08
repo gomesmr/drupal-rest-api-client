@@ -39,30 +39,6 @@ class FtsController extends ControllerBase
         );
     }
 
-    /**
-     * Content.
-     *
-     * @return array
-     *   Return array.
-     */
-    public function content()
-    {
-        // This would get 50 people from Planning Center on page load.
-        $query = [
-            'per_page' => 10
-        ];
-        $request = $this->ftsApiClient->connect('get', '/api/v1.0/global_clusters/', $query, []);
-        $results = json_decode($request, true);
-
-        // Renderizando os dados diretamente, sem necessidade de envolver em um array 'clusters'
-        return [
-            '#theme' => 'fts_list', // assign the theme [products-list.html.twig]
-            '#title' => 'Rest API Client', // assign the page title
-            '#pagehtml' => 'List of Data is coming from : HR.info Clusters ', // assign the string message like this
-            '#data' => $results, // Passando os resultados diretamente
-        ];
-    }
-
     public function postMleva()
     {
         $endpoint = '/mleva';
@@ -97,5 +73,40 @@ class FtsController extends ControllerBase
         return [
             '#markup' => 'Erro ao tentar recuperar dados.'
         ];
+    }
+
+    /**
+     * Product by Id.
+     *
+     * @param string $gtin
+     *   The GTIN of the product.
+     *
+     * @return array
+     *   The product data or an error message.
+     */
+    public function getProductByGtin($gtin)
+    {
+        $endpoint = '/mleva/product/';
+        $query = ['gtin' => $gtin];
+
+        try {
+            $response = $this->ftsApiClient->connect('get', $endpoint, $query, null);
+
+            if ($response) {
+                $product = new Product($response);
+
+                return [
+                    '#theme' => 'fts_product',
+                    '#product' => $product,
+                ];
+            }
+
+            return ['#markup' => 'Produto não encontrado.'];
+
+        } catch (\Exception $exception) {
+            $this->messenger()->addError(t('Erro ao buscar o produto: @error', ['@error' => $exception->getMessage()]));
+            \Drupal::logger('fts_api')->error('Erro ao buscar o produto: %error', ['%error' => $exception->getMessage()]);
+            return ['#markup' => 'Erro ao buscar o produto.'];
+        }
     }
 }
