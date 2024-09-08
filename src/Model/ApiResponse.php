@@ -3,40 +3,16 @@
 namespace Drupal\fts\Model;
 
 
-class ApiResponse
-{
+class ApiResponse {
     public $products = [];
     public $company;
     public $user;
     public $dateTime;
-    public $recalculateProducts = [];
-    public $errorMessage = [];
 
-    public function __construct($response)
-    {
-        $this->dateTime = $response['dateTime'] ?? null;
-        $this->company = new Company();
-        $this->company->companyName = $response['company']['companyName'] ?? null;
-
-        $this->user = new User();
-        $this->user->userName = $response['user']['userName'] ?? null;
-
-        if (!empty($response['products'])) {
-            foreach ($response['products'] as $productData) {
-                $product = new Product();
-                $product->gtin = $productData['gtin'] ?? null;
-                $product->description = $productData['description'] ?? null;
-                $product->index = $productData['index'] ?? null;
-                $product->price = $productData['price'] ?? null;
-                $product->volume = $productData['volume'] ?? null;
-                $product->quantity = $productData['quantity'] ?? null;
-                $product->unity = $productData['unity'] ?? null;
-                $product->status = $productData['status'] ?? null;
-                $this->products[] = $product;
-            }
-        }
-
-        $this->recalculateProducts = $response['recalculateProducts'] ?? [];
-        $this->errorMessage = $response['errorMessage'] ?? [];
+    public function __construct(array $products, Company $company, User $user, $dateTime) {
+        $this->products = $products;
+        $this->company = $company;
+        $this->user = $user;
+        $this->dateTime = $dateTime;
     }
 }

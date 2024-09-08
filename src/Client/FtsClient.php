@@ -8,6 +8,9 @@ use Drupal\fts\FtsClientInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Drupal\fts\Model\ApiResponse;
+use Drupal\fts\Model\Product;
+use Drupal\fts\Model\Company;
+use Drupal\fts\Model\User;
 
 class FtsClient implements FtsClientInterface
 {
@@ -91,13 +94,20 @@ class FtsClient implements FtsClientInterface
             // Decodifica a resposta JSON
             $data = json_decode($response->getBody()->getContents(), true);
 
-            // Depuração: Verificar se a API retorna os dados corretos
-            $this->messenger->addMessage('<pre>' . print_r($data, TRUE) . '</pre>', 'status');
+            // Mapeia os produtos para a classe Product
+            $products = [];
+            foreach ($data['products'] as $productData) {
+                $products[] = new Product($productData);
+            }
 
-            // Mapeia a resposta para objetos PHP
-            return new ApiResponse($data);
+            // Mapeia as outras classes
+            $company = new Company($data['company']);
+            $user = new User($data['user']);
 
-        } catch (RequestException $exception) { // <- O erro provavelmente está aqui
+            // Retorna uma instância de ApiResponse
+            return new ApiResponse($products, $company, $user, $data['dateTime']);
+
+        } catch (RequestException $exception) {
             $this->showMessage(t('Failed to complete task: %error', ['%error' => $exception->getMessage()]), 'error');
             Drupal::logger('fts_api')->error('Failed to complete task: %error', ['%error' => $exception->getMessage()]);
             return FALSE;
