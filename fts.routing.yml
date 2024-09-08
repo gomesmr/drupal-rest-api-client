@@ -1,10 +1,10 @@
 fts.clusters:
-  path: '/Clusters' 
-  defaults: 
-    _controller: '\Drupal\fts\Controller\FtsController::content' 
+  path: '/Clusters'
+  defaults:
+    _controller: '\Drupal\fts\Controller\FtsController::content'
     _title: 'HR Clusters'
-  requirements: 
-    _permission: 'access content'  
+  requirements:
+    _permission: 'access content'
 
 fts.mleva_post:
   path: '/mleva-post'

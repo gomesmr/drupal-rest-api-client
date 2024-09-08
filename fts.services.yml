@@ -2,5 +2,5 @@
 services:
   fts.client:
     class: Drupal\fts\Client\FtsClient
-    arguments: ['@http_client', '@messenger']
+    arguments: [ '@http_client', '@messenger' ]
     

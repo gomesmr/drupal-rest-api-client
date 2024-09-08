@@ -1,21 +1,20 @@
-<div class="container">
+<h1>Produtos do {{ company.companyName }}</h1>
+<p>Usuário: {{ user.userName }} - Data: {{ dateTime }}</p>
 
-  <h1> {{ data.title }} </h1>
-  <div><strong> {{ pagehtml }} </strong></div>
+<ul>
+    {% for product in products %}
+        <li>
+            {{ product.description }} - Preço: {{ product.price }} - Quantidade: {{ product.quantity }} -
+            Status: {{ product.status }}
+        </li>
+    {% else %}
+        <li>Nenhum produto encontrado.</li>
+    {% endfor %}
+</ul>
 
-  {% for item in data.clusters.data %}
-    <div>
-    <p>
-    <ul class="no-bullets">
-    <li>{{ item.id }}</li>
-    <li>{{ item.label }}</li>
-    <li>{{ item.acronym }}<li>
-    <li>{{ item.type }}</li>
-    <li>{{ item.homepage }}</li>
-    </ul>
-    </p>
-    </div>
-    </hr>
-  {% endfor %}
-
-</div>
+<pre>
+  {{ dump(company) }}
+    {{ dump(user) }}
+    {{ dump(dateTime) }}
+    {{ dump(products) }}
+</pre>
