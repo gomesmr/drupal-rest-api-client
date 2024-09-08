@@ -23,27 +23,25 @@ class FtsClient implements FtsClientInterface {
    */
   public function __construct(ClientInterface $http_client) {
     $this->httpClient = $http_client;
-    $this->base_uri = 'https://www.humanitarianresponse.info';
+    $this->base_uri = 'http://localhost:41062/w3mleva/mleva/web/';
   }
   /**
    * { @inheritdoc }
    */
   public function connect($method, $endpoint, $query, $body) {
     try {
-      $response = $this->httpClient->{$method}(
-        $this->base_uri . $endpoint,
-        $this->buildOptions($query, $body)
-      );
+        $response = $this->httpClient->{$method}(
+            $this->base_uri . $endpoint,
+            $this->buildOptions($query, json_encode($body)) // Convertendo body para JSON
+        );
     }
     catch (RequestException $exception) {
-      drupal_set_message(t('Failed to complete Hr Task "%error"', ['%error' => $exception->getMessage()]), 'error');
-      \Drupal::logger('fts_api')->error('Failed to complete Hr Task "%error"', ['%error' => $exception->getMessage()]);
-      return FALSE;
+        drupal_set_message(t('Failed to complete Task "%error"', ['%error' => $exception->getMessage()]), 'error');
+        \Drupal::logger('fts_api')->error('Failed to complete Task "%error"', ['%error' => $exception->getMessage()]);
+        return FALSE;
     }
-    $headers = $response->getHeaders();
-    $this->throttle($headers);
     return $response->getBody()->getContents();
-  }
+}
   /**
    * Build options for the client.
    */

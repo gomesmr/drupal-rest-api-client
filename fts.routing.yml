@@ -5,3 +5,11 @@ fts.clusters:
     _title: 'HR Clusters'
   requirements: 
     _permission: 'access content'  
+
+fts.mleva_post:
+  path: '/mleva-post'
+  defaults:
+    _controller: '\Drupal\fts\Controller\FtsController::postMleva'
+    _title: 'Post MLeva Data'
+  requirements:
+    _permission: 'access content'

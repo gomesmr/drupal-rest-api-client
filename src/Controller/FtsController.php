@@ -66,4 +66,32 @@ class FtsController extends ControllerBase {
    //return $build;
 
   }
+
+  public function postMleva() {
+    $endpoint = '/mleva';
+
+    $payload = [
+        'products' => [
+            ['gtin' => '7896075300205', 'price' => '36.89'],
+            ['gtin' => '7898955352168', 'price' => '22.99'],
+            ['gtin' => '7896075300793', 'price' => '30.99']
+        ],
+        'company' => [
+            'companyName' => 'Varejão',
+            'localization' => '-22.83512749482224, -45.2265350010767'
+        ],
+        'user' => [
+            'userName' => 'lobsom'
+        ]
+    ];
+
+    $response = $this->ftsApiClient->connect('post', $endpoint, [], $payload);
+
+    return [
+        '#theme' => 'fts_list',
+        '#title' => 'MLeva Response',
+        '#pagehtml' => 'Response from MLeva API',
+        '#data' => json_decode($response, true),
+    ];
+}
 }

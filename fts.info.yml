@@ -1,8 +1,7 @@
 name: fts
-description: Creates a page consuming HR rest web services".
+description: "Creates a page consuming HR rest web services."
 package: Custom
-
 type: module
-Version: 1.0
-core: 8.x
+version: 1.0
+core_version_requirement: ^10
 
