@@ -1,11 +1,11 @@
-<h1>Produtos do {{ company.companyName }}</h1>
+<h1>Comparação de Produtos</h1>
+<p>Empresa: {{ company.companyName }}</p>
 <p>Usuário: {{ user.userName }} - Data: {{ dateTime }}</p>
 
 <ul>
     {% for product in products %}
         <li>
-            {{ product.description }} - Preço: {{ product.price }} - Quantidade: {{ product.quantity }} -
-            Status: {{ product.status }}
+            {{ product.description }} - Preço: {{ product.price }} - Quantidade: {{ product.quantity }} - Volume: {{ product.volume }} {{ product.unity }} - Status: {{ product.status }}
         </li>
     {% else %}
         <li>Nenhum produto encontrado.</li>
@@ -13,7 +13,7 @@
 </ul>
 
 <pre>
-  {{ dump(company) }}
+    {{ dump(company) }}
     {{ dump(user) }}
     {{ dump(dateTime) }}
     {{ dump(products) }}

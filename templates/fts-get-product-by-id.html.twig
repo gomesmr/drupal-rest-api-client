@@ -1,6 +1,6 @@
 <h1>Produto: {{ product.gtin }}</h1>
-<p>Descrição: {{ product.description }}</p>
+<p>Descrição: {{ product.descricao }}</p>
 <p>Marca: {{ product.marca }}</p>
-<p>Volume: {{ product.volume }} {{ product.unity }}</p>
-<p>Quantidade: {{ product.quantity }}</p>
-<p>Status: {{ product.status }}</p>
+<p>Volume: {{ product.apresentacao.volume }} {{ product.apresentacao.unidade }}</p>
+<p>Quantidade: {{ product.apresentacao.itemQuantidade }}</p>
+<p>Validação: {{ product.validacao }}</p>

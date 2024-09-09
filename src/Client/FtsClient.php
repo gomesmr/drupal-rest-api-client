@@ -9,6 +9,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Drupal\fts\Model\ApiResponse;
 use Drupal\fts\Model\Product;
+use Drupal\fts\Model\ProductGetId;
 use Drupal\fts\Model\Company;
 use Drupal\fts\Model\User;
 
@@ -82,31 +83,37 @@ class FtsClient implements FtsClientInterface
      * @return string|false
      *   The response body or FALSE on failure.
      */
-    public function connect($method, $endpoint, $query, $body)
+    public function connect($method, $endpoint, $query = [], $body = null)
     {
         try {
+            $options = $this->buildOptions($query, $body);
+
             // Faz a requisição HTTP usando o Guzzle
             $response = $this->httpClient->{$method}(
                 $this->base_uri . $endpoint,
-                $this->buildOptions($query, $body)
+                $options
             );
 
             // Decodifica a resposta JSON
             $data = json_decode($response->getBody()->getContents(), true);
 
-            // Mapeia os produtos para a classe Product
-            $products = [];
-            foreach ($data['products'] as $productData) {
-                $products[] = new Product($productData);
+            // Verifica se é uma requisição GET ou POST
+            if ($method === 'post') {
+                // Mapeamento da resposta para o POST (por exemplo, comparando produtos)
+                $products = [];
+                foreach ($data['products'] as $productData) {
+                    $products[] = new Product($productData);
+                }
+
+                $company = new Company($data['company']);
+                $user = new User($data['user']);
+
+                return new ApiResponse($products, $company, $user, $data['dateTime']);
+
+            } else if ($method === 'get') {
+                // Mapeamento da resposta para o GET (por exemplo, buscar produto por GTIN)
+                return $data; // Retorna o produto diretamente, como JSON para mapear depois
             }
-
-            // Mapeia as outras classes
-            $company = new Company($data['company']);
-            $user = new User($data['user']);
-
-            // Retorna uma instância de ApiResponse
-            return new ApiResponse($products, $company, $user, $data['dateTime']);
-
         } catch (RequestException $exception) {
             $this->showMessage(t('Failed to complete task: %error', ['%error' => $exception->getMessage()]), 'error');
             Drupal::logger('fts_api')->error('Failed to complete task: %error', ['%error' => $exception->getMessage()]);

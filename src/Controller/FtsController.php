@@ -4,6 +4,7 @@ namespace Drupal\fts\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\fts\Client\FtsClient;
+use Drupal\fts\Model\ProductGetId;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -62,7 +63,7 @@ class FtsController extends ControllerBase
 
         if ($response) {
             return [
-                '#theme' => 'fts_list',
+                '#theme' => 'fts_compare_response',
                 '#products' => $response->products ?? [],  // Certifica-se de que os produtos sejam passados
                 '#company' => $response->company ?? null,
                 '#user' => $response->user ?? null,
@@ -93,10 +94,10 @@ class FtsController extends ControllerBase
             $response = $this->ftsApiClient->connect('get', $endpoint, $query, null);
 
             if ($response) {
-                $product = new Product($response);
+                $product = new ProductGetId($response);
 
                 return [
-                    '#theme' => 'fts_product',
+                    '#theme' => 'fts_get_product_by_id',
                     '#product' => $product,
                 ];
             }
@@ -108,5 +109,7 @@ class FtsController extends ControllerBase
             \Drupal::logger('fts_api')->error('Erro ao buscar o produto: %error', ['%error' => $exception->getMessage()]);
             return ['#markup' => 'Erro ao buscar o produto.'];
         }
+
     }
 }
+
