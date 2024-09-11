@@ -43,6 +43,39 @@ class FtsController extends ControllerBase
     public function postMleva()
     {
         $endpoint = '/mleva';
+
+        // Recebe o payload via POST
+        $request = \Drupal::request();
+        $payload = json_decode($request->getContent(), true);
+
+        if (!$payload) {
+            return [
+                '#markup' => 'Payload inválido ou não recebido.',
+            ];
+        }
+
+        // Fazendo a requisição
+        $response = $this->ftsApiClient->connect('post', $endpoint, [], $payload);
+
+        if ($response) {
+            return [
+                '#theme' => 'fts_compare_response',
+                '#products' => $response->products ?? [],  // Certifica-se de que os produtos sejam passados
+                '#company' => $response->company ?? null,
+                '#user' => $response->user ?? null,
+                '#dateTime' => $response->dateTime ?? null,
+            ];
+        }
+
+        return [
+            '#markup' => 'Erro ao tentar recuperar dados.'
+        ];
+    }
+
+
+    public function payloadPostMleva()
+    {
+        $endpoint = '/mleva';
         $payload = [
             'products' => [
                 ['gtin' => '7896075300205', 'price' => '36.89'],

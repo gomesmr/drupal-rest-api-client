@@ -6,6 +6,14 @@ fts.mleva_post:
   requirements:
     _permission: 'access content'
 
+fts.mleva_post-01:
+  path: '/mleva-post-payload'
+  defaults:
+    _controller: '\Drupal\fts\Controller\FtsController::payloadPostMleva'
+    _title: 'Post MLeva Data'
+  requirements:
+    _permission: 'access content'
+
 fts.product_get:
   path: '/mleva-product/{gtin}'
   defaults:
